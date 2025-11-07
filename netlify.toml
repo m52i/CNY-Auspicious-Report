@@ -1,0 +1,8 @@
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+[[redirects]]
+  from = "/api/fortune"
+  to = "/.netlify/functions/fortune"
+  status = 200

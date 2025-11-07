@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2026 Auspicious Year Report</title>
+  <style>
+    :root { --brand: #ff8a00; }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; background: #fafafa; color: #222; }
+    header { padding: 24px 16px; background: white; border-bottom: 1px solid #eee; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 16px; }
+    h1 { margin: 0 0 8px; font-size: 1.6rem; }
+    p.lead { margin: 0; color: #444; }
+    form { background: white; border: 1px solid #eee; border-radius: 12px; padding: 16px; margin-top: 16px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; }
+    input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; }
+    button { margin-top: 12px; padding: 12px 16px; border: 0; border-radius: 10px; background: var(--brand); color: #111; font-weight: 700; cursor: pointer; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    small.notice { display: block; margin-top: 10px; color: #555; line-height: 1.4; }
+    .result { background: white; border: 1px solid #eee; border-radius: 12px; padding: 16px; margin-top: 16px; min-height: 120px; }
+    .error { color: #b00020; font-weight: 600; }
+    .signoff { background: rgba(255,138,0,0.1); border-left: 4px solid var(--brand); padding: 12px; margin-top: 16px; border-radius: 8px; }
+    footer { text-align: center; color: #777; font-size: 0.9rem; padding: 32px 16px; }
+    code.kbd { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>2026 Auspicious Year Report</h1>
+      <p class="lead">One-minute fortune reading. No sign-ups. No data stored.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <form id="fortune-form">
+      <label for="dob">Enter your Date of Birth (format <code class="kbd">DDMMMYYYY</code>, e.g., <code class="kbd">08DEC1977</code>):</label>
+      <input id="dob" name="dob" type="text" placeholder="08DEC1977" autocomplete="off" required />
+      <button id="go" type="submit">Get My 2026 Report</button>
+      <small class="notice"><strong>Notice &amp; Disclaimer:</strong> Your date of birth enables the one-time 2026 Auspicious Report and is not stored, shared, or used for marketing. Inputs are processed by OpenAI in accordance with their <a href="https://openai.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>. No personal data is collected or retained by <strong>Mike Lim</strong>.</small>
+    </form>
+
+    <div id="result" class="result"></div>
+  </main>
+
+  <footer>
+    &copy; 2025 SGHomeCompass — Built for sharing on FB &amp; WhatsApp.
+  </footer>
+
+<script>
+  const $form = document.getElementById('fortune-form');
+  const $result = document.getElementById('result');
+  const $btn = document.getElementById('go');
+
+  function setLoading(isLoading) {
+    $btn.disabled = isLoading;
+    $btn.textContent = isLoading ? 'Generating…' : 'Get My 2026 Report';
+  }
+
+  $form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $result.innerHTML = '';
+    const dob = document.getElementById('dob').value.trim().toUpperCase();
+    setLoading(true);
+    try {
+      const res = await fetch('/api/fortune', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dob })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        $result.innerHTML = '<p class="error">' + (data.message || 'Please use DDMMMYYYY, e.g., 08DEC1977.') + '</p>';
+      } else {
+        $result.innerHTML = data.resultHtml;
+        window.scrollTo({ top: $result.offsetTop - 12, behavior: 'smooth' });
+      }
+    } catch (err) {
+      $result.innerHTML = '<p class="error">Network error. Please try again.</p>';
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
+</body>
+</html>
