@@ -121,6 +121,7 @@ exports.handler = async (event) => {
     return json({ resultHtml });
   } catch (err) {
     console.error(err);
-    return json({ message: "Server error. Please try again later." }, 500);
+    // Temporarily surface the error to the client for debugging (no secrets exposed)
+    return json({ message: "Server error: " + (err && err.message ? err.message : "Unknown") }, 500);
   }
 };
