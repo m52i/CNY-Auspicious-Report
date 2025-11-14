@@ -64,7 +64,7 @@
     const dob = document.getElementById('dob').value.trim().toUpperCase();
     setLoading(true);
     try {
-      const res = await fetch('/api/fortune', {
+      const res = await fetch('/.netlify/functions/fortune', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dob })
