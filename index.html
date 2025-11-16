@@ -190,7 +190,7 @@
       background-color: #fff5e6;
       border-radius: 10px;
       border: 1px solid #f0dfc3;
-      padding: 0.8rem 1rem;
+      padding: 0.9rem 1.2rem;
     }
 
     .sig-text p {
@@ -203,7 +203,8 @@
     }
 
     .sig-logo img {
-      max-height: 54px;
+      max-height: 80px;   /* bigger logo */
+      max-width: 180px;
       width: auto;
       display: block;
     }
@@ -277,29 +278,13 @@
     <div id="result"></div>
 
     <div class="signature-card">
-      <div class="sig-text">
-        <p>
-          — Prepared by <strong>Mike Lim</strong>, CEA Reg No. R026708F
-        </p>
-        <p>📞 +65 9692 9209</p>
-        <p>
-          <strong>SGHomeCompass</strong> | Your Chapter in Home Transition
-        </p>
-        <p>
-          🔗
-          <a href="https://www.youtube.com/@SGHomeCompass" target="_blank"
-            >YouTube</a
-          >
-          |
-          <a href="https://www.instagram.com/sghomecompass/" target="_blank"
-            >Instagram</a
-          >
-        </p>
+      <div class="sig-text" id="sigText">
+        <!-- default EN content will be injected by JS -->
       </div>
 
       <div class="sig-logo">
-        <!-- TODO: update src to the actual path/filename of your full logo PNG -->
-        <img src="sghc-full.png" alt="SGHomeCompass logo" />
+        <!-- update src to your deployed logo path -->
+        <img src="images/logo-full.png" alt="SGHomeCompass logo" />
       </div>
     </div>
   </div>
@@ -311,9 +296,39 @@
     const langZhBtn = document.getElementById("langZhBtn");
     const errorEl = document.getElementById("error");
     const resultEl = document.getElementById("result");
+    const sigTextEl = document.getElementById("sigText");
 
     let selectedLanguage = null; // 'en' or 'zh'
 
+    // ----- Signature (advert) content in EN / ZH -----
+    const sigHtmlEn = `
+      <p>— Prepared by <strong>Mike Lim</strong>, CEA Reg No. R026708F</p>
+      <p>📞 +65 9692 9209</p>
+      <p><strong>SGHomeCompass</strong> | Your Chapter in Home Transition</p>
+      <p>
+        🔗
+        <a href="https://www.youtube.com/@SGHomeCompass" target="_blank">YouTube</a> |
+        <a href="https://www.instagram.com/sghomecompass/" target="_blank">Instagram</a>
+      </p>
+    `;
+
+    const sigHtmlZh = `
+      <p>— 由 <strong>Mike Lim</strong> 准备，CEA 注册号码 R026708F</p>
+      <p>📞 +65 9692 9209</p>
+      <p><strong>SGHomeCompass</strong> ｜ 您在住家转换旅程中的方向指引</p>
+      <p>
+        🔗
+        <a href="https://www.youtube.com/@SGHomeCompass" target="_blank">YouTube 频道</a> |
+        <a href="https://www.instagram.com/sghomecompass/" target="_blank">Instagram 专页</a>
+      </p>
+    `;
+
+    function setSignatureLanguage(lang) {
+      if (!sigTextEl) return;
+      sigTextEl.innerHTML = lang === "zh" ? sigHtmlZh : sigHtmlEn;
+    }
+
+    // ----- Helpers -----
     function showError(msg) {
       if (!errorEl) {
         if (msg) alert(msg);
@@ -332,7 +347,9 @@
       getReportBtn.classList.remove("disabled");
     }
 
-    // 1) Main button: validate DoB, then show language options
+    // ----- Button behaviour -----
+
+    // 1) User clicks main button → validate DoB → show EN / 中文
     getReportBtn.addEventListener("click", () => {
       const dob = dobInput.value.trim();
       if (!dob) {
@@ -348,7 +365,7 @@
       langZhBtn.classList.remove("hidden");
     });
 
-    // 2) When user picks a language, call the API
+    // 2) User taps English / 中文 → set language + call API
     langEnBtn.addEventListener("click", () => handleLanguageClick("en"));
     langZhBtn.addEventListener("click", () => handleLanguageClick("zh"));
 
@@ -356,6 +373,7 @@
       selectedLanguage = lang;
       langEnBtn.classList.toggle("selected", lang === "en");
       langZhBtn.classList.toggle("selected", lang === "zh");
+      setSignatureLanguage(lang); // switch footer language
       generateReport();
     }
 
@@ -388,7 +406,6 @@
 
         const data = await resp.json();
         const html = data.html || data.result || "";
-
         resultEl.innerHTML = html;
         colorizeDosDonts();
       } catch (err) {
@@ -415,6 +432,9 @@
         }
       });
     }
+
+    // Initialise footer as English on first load
+    setSignatureLanguage("en");
   </script>
 </body>
 </html>
