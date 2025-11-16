@@ -1,87 +1,420 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
   <title>2026 Auspicious Year Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --brand: #ff8a00; }
-    * { box-sizing: border-box; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; background: #fafafa; color: #222; }
-    header { padding: 24px 16px; background: white; border-bottom: 1px solid #eee; }
-    .wrap { max-width: 760px; margin: 0 auto; padding: 16px; }
-    h1 { margin: 0 0 8px; font-size: 1.6rem; }
-    p.lead { margin: 0; color: #444; }
-    form { background: white; border: 1px solid #eee; border-radius: 12px; padding: 16px; margin-top: 16px; }
-    label { display: block; font-weight: 600; margin-bottom: 8px; }
-    input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; }
-    button { margin-top: 12px; padding: 12px 16px; border: 0; border-radius: 10px; background: var(--brand); color: #111; font-weight: 700; cursor: pointer; }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-    small.notice { display: block; margin-top: 10px; color: #555; line-height: 1.4; }
-    .result { background: white; border: 1px solid #eee; border-radius: 12px; padding: 16px; margin-top: 16px; min-height: 120px; }
-    .error { color: #b00020; font-weight: 600; }
-    .signoff { background: rgba(255,138,0,0.1); border-left: 4px solid var(--brand); padding: 12px; margin-top: 16px; border-radius: 8px; }
-    footer { text-align: center; color: #777; font-size: 0.9rem; padding: 32px 16px; }
-    code.kbd { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
+    :root {
+      --accent: #ff9100;
+      --accent-dark: #f57c00;
+      --bg-beige: #f3ecdd;
+      --do-green: #2e7d32;
+      --dont-red: #c62828;
+      --border-soft: #e0d4c0;
+      --text-main: #333333;
+      --text-muted: #666666;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: linear-gradient(#f7f3ea, #fdfbf7);
+      color: var(--text-main);
+    }
+
+    .page {
+      max-width: 800px;
+      margin: 1.5rem auto 2.5rem;
+      padding: 0 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      padding: 1rem 1.25rem 1.25rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .dob-row {
+      margin-top: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    #dob {
+      width: 100%;
+      padding: 0.55rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .primary-btn {
+      padding: 0.55rem 1.4rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+      transition: background 0.15s ease, transform 0.08s ease,
+        box-shadow 0.08s ease;
+    }
+
+    .primary-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+    }
+
+    .primary-btn.disabled,
+    .primary-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .lang-btn {
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background-color: #f5f5f5;
+      color: #333;
+      font-weight: 500;
+      font-size: 0.88rem;
+      cursor: pointer;
+      min-width: 74px;
+      text-align: center;
+    }
+
+    .lang-btn:hover {
+      background-color: #eeeeee;
+    }
+
+    .lang-btn.selected {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .notice {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .notice strong {
+      font-weight: 700;
+    }
+
+    .error {
+      color: var(--dont-red);
+      margin-top: 0.35rem;
+      font-size: 0.85rem;
+    }
+
+    #result {
+      margin-top: 1.25rem;
+      line-height: 1.55;
+    }
+
+    #result h2,
+    #result h3 {
+      margin-top: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    #result ul {
+      padding-left: 1.1rem;
+    }
+
+    #result li {
+      margin-bottom: 0.25rem;
+    }
+
+    .expired-message {
+      padding: 0.75rem 0.9rem;
+      border-radius: 8px;
+      background-color: #fff3e0;
+      border: 1px solid #ffe0b2;
+    }
+
+    .signature-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.75rem;
+      background-color: #fff5e6;
+      border-radius: 10px;
+      border: 1px solid #f0dfc3;
+      padding: 0.8rem 1rem;
+    }
+
+    .sig-text p {
+      margin: 0.15rem 0;
+      font-size: 0.9rem;
+    }
+
+    .sig-text strong {
+      font-weight: 700;
+    }
+
+    .sig-logo img {
+      max-height: 54px;
+      width: auto;
+      display: block;
+    }
+
+    a {
+      color: #5c3bb1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 560px) {
+      .signature-card {
+        align-items: flex-start;
+      }
+
+      .sig-logo {
+        margin-left: auto;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <h1>2026 Auspicious Year Report</h1>
-      <p class="lead">One-minute fortune reading. No sign-ups. No data stored.</p>
+  <div class="page">
+    <h1>2026 Auspicious Year Report</h1>
+    <p class="subtitle">
+      One-minute fortune reading. No sign-ups. No data stored.
+    </p>
+
+    <div class="card">
+      <label for="dob">
+        Enter your Date of Birth
+        <span style="font-weight:normal;">
+          (format <code>DDMMMYYYY</code>, e.g., <code>08DEC1977</code>)
+        </span>
+      </label>
+      <div class="dob-row">
+        <input
+          id="dob"
+          type="text"
+          maxlength="9"
+          placeholder="08DEC1977"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="actions">
+        <button id="getReportBtn" class="primary-btn">
+          Get My 2026 Report
+        </button>
+        <button id="langEnBtn" class="lang-btn hidden">English</button>
+        <button id="langZhBtn" class="lang-btn hidden">中文</button>
+      </div>
+
+      <div id="error" class="error"></div>
+
+      <p class="notice">
+        <strong>Notice &amp; Disclaimer:</strong>
+        Your date of birth enables the one-time 2026 Auspicious Report and is
+        not stored, shared, or used for marketing. Inputs are processed by
+        OpenAI in accordance with their
+        <a href="https://openai.com/policies/privacy-policy" target="_blank"
+          >Privacy Policy</a
+        >. No personal data is collected or retained by
+        <strong>Mike Lim</strong>.
+      </p>
     </div>
-  </header>
 
-  <main class="wrap">
-    <form id="fortune-form">
-      <label for="dob">Enter your Date of Birth (format <code class="kbd">DDMMMYYYY</code>, e.g., <code class="kbd">08DEC1977</code>):</label>
-      <input id="dob" name="dob" type="text" placeholder="08DEC1977" autocomplete="off" required />
-      <button id="go" type="submit">Get My 2026 Report</button>
-      <small class="notice"><strong>Notice &amp; Disclaimer:</strong> Your date of birth enables the one-time 2026 Auspicious Report and is not stored, shared, or used for marketing. Inputs are processed by OpenAI in accordance with their <a href="https://openai.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>. No personal data is collected or retained by <strong>Mike Lim</strong>.</small>
-    </form>
+    <div id="result"></div>
 
-    <div id="result" class="result"></div>
-  </main>
+    <div class="signature-card">
+      <div class="sig-text">
+        <p>
+          — Prepared by <strong>Mike Lim</strong>, CEA Reg No. R026708F
+        </p>
+        <p>📞 +65 9692 9209</p>
+        <p>
+          <strong>SGHomeCompass</strong> | Your Chapter in Home Transition
+        </p>
+        <p>
+          🔗
+          <a href="https://www.youtube.com/@SGHomeCompass" target="_blank"
+            >YouTube</a
+          >
+          |
+          <a href="https://www.instagram.com/sghomecompass/" target="_blank"
+            >Instagram</a
+          >
+        </p>
+      </div>
 
-  <footer>
-    &copy; 2025 SGHomeCompass — Built for sharing on FB &amp; WhatsApp.
-  </footer>
+      <div class="sig-logo">
+        <!-- TODO: update src to the actual path/filename of your full logo PNG -->
+        <img src="E:\Work\Project\CNY Auspicious Report\Full Logo with Transparent Background.png" />
+      </div>
+    </div>
+  </div>
 
-<script>
-  const $form = document.getElementById('fortune-form');
-  const $result = document.getElementById('result');
-  const $btn = document.getElementById('go');
+  <script>
+    const dobInput = document.getElementById("dob");
+    const getReportBtn = document.getElementById("getReportBtn");
+    const langEnBtn = document.getElementById("langEnBtn");
+    const langZhBtn = document.getElementById("langZhBtn");
+    const errorEl = document.getElementById("error");
+    const resultEl = document.getElementById("result");
 
-  function setLoading(isLoading) {
-    $btn.disabled = isLoading;
-    $btn.textContent = isLoading ? 'Generating…' : 'Get My 2026 Report';
-  }
+    let selectedLanguage = null; // 'en' or 'zh'
 
-  $form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    $result.innerHTML = '';
-    const dob = document.getElementById('dob').value.trim().toUpperCase();
-    setLoading(true);
-    try {
-      const res = await fetch('/.netlify/functions/fortune', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dob })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        $result.innerHTML = '<p class="error">' + (data.message || 'Please use DDMMMYYYY, e.g., 08DEC1977.') + '</p>';
-      } else {
-        $result.innerHTML = data.resultHtml;
-        window.scrollTo({ top: $result.offsetTop - 12, behavior: 'smooth' });
+    function showError(msg) {
+      if (!errorEl) {
+        if (msg) alert(msg);
+        return;
       }
-    } catch (err) {
-      $result.innerHTML = '<p class="error">Network error. Please try again.</p>';
-    } finally {
-      setLoading(false);
+      errorEl.textContent = msg || "";
     }
-  });
-</script>
+
+    function resetLanguageState() {
+      selectedLanguage = null;
+      langEnBtn.classList.add("hidden");
+      langZhBtn.classList.add("hidden");
+      langEnBtn.classList.remove("selected");
+      langZhBtn.classList.remove("selected");
+      getReportBtn.disabled = false;
+      getReportBtn.classList.remove("disabled");
+    }
+
+    // 1) Main button: validate DoB, then show language options
+    getReportBtn.addEventListener("click", () => {
+      const dob = dobInput.value.trim();
+      if (!dob) {
+        showError("Please enter your date of birth in DDMMMYYYY format first.");
+        return;
+      }
+
+      showError("");
+      getReportBtn.disabled = true;
+      getReportBtn.classList.add("disabled");
+
+      langEnBtn.classList.remove("hidden");
+      langZhBtn.classList.remove("hidden");
+    });
+
+    // 2) When user picks a language, call the API
+    langEnBtn.addEventListener("click", () => handleLanguageClick("en"));
+    langZhBtn.addEventListener("click", () => handleLanguageClick("zh"));
+
+    function handleLanguageClick(lang) {
+      selectedLanguage = lang;
+      langEnBtn.classList.toggle("selected", lang === "en");
+      langZhBtn.classList.toggle("selected", lang === "zh");
+      generateReport();
+    }
+
+    async function generateReport() {
+      const dob = dobInput.value.trim();
+      if (!dob) {
+        showError("Please enter your date of birth.");
+        return;
+      }
+      if (!selectedLanguage) {
+        showError("Please choose English or 中文.");
+        return;
+      }
+
+      if (resultEl) {
+        resultEl.innerHTML = "Generating your 2026 report…";
+      }
+      showError("");
+
+      try {
+        const resp = await fetch("/.netlify/functions/fortune", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dob, language: selectedLanguage }),
+        });
+
+        if (!resp.ok) {
+          throw new Error("Server error. Please try again in a while.");
+        }
+
+        const data = await resp.json();
+        const html = data.html || data.result || "";
+
+        resultEl.innerHTML = html;
+        colorizeDosDonts();
+      } catch (err) {
+        showError(err.message || "Something went wrong. Please try again.");
+        if (resultEl) resultEl.innerHTML = "";
+      }
+    }
+
+    // Reset language options when DOB changes
+    dobInput.addEventListener("input", () => {
+      resetLanguageState();
+    });
+
+    // 4) Colour Do / Don't bullets
+    function colorizeDosDonts() {
+      if (!resultEl) return;
+      const items = resultEl.querySelectorAll("li");
+      items.forEach((li) => {
+        const text = (li.textContent || "").trim().toLowerCase();
+        if (text.startsWith("do:")) {
+          li.style.color = "#2e7d32"; // green
+        } else if (text.startsWith("don't:") || text.startsWith("dont:")) {
+          li.style.color = "#c62828"; // red
+        }
+      });
+    }
+  </script>
 </body>
 </html>
