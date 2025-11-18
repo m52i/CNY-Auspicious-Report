@@ -6,7 +6,6 @@
 // - Uses OpenAI Chat Completions API (gpt-4.1-mini)
 
 async function parseJsonBody(req) {
-  // In many Vercel runtimes, req.body may already be an object.
   if (req.body) {
     if (typeof req.body === "string") {
       return JSON.parse(req.body || "{}");
@@ -14,7 +13,6 @@ async function parseJsonBody(req) {
     return req.body;
   }
 
-  // Fallback: manual stream read (Node.js IncomingMessage)
   return await new Promise((resolve, reject) => {
     let data = "";
     req.on("data", (chunk) => {
@@ -49,7 +47,6 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Hard stop date for the 2026 campaign (inclusive)
   const EXPIRY_DATE = "2026-03-31";
   const now = new Date();
   const expiry = new Date(`${EXPIRY_DATE}T23:59:59Z`);
@@ -86,11 +83,11 @@ export default async function handler(req, res) {
 
   const languageInstruction =
     lang === "zh"
-      ? "Write the entire report in natural, fluent Simplified Chinese suitable for readers in Singapore. Keep the HTML structure and section headings consistent."
-      : "Write the entire report in English. Keep the HTML structure and section headings consistent.";
+      ? "Write the entire report in natural, fluent Simplified Chinese suitable for readers in Singapore. Present it as a '2026 马年运势报告' for the person, while keeping the HTML structure and section headings consistent."
+      : "Write the entire report in English. Present it as a 2026 Year of the Horse fortune reading for the person, while keeping the HTML structure and section headings consistent.";
 
   const sectionsInstruction = `
-Please generate a personalised 2026 Auspicious Year Report for the following person.
+Please generate a personalised 2026 Auspicious Year / Year of the Horse Report for the following person.
 
 Date of birth: ${dob}
 
