@@ -1,6 +1,39 @@
 // api/fortune.js
 //
-// Vercel serverless function for the 2026 Auspicious Year Report.
+// Vercel Serverless Function for the 2026 Auspicious Year Report.
+// - POST JSON { dob: "08DEC1977", language: "en" | "zh" }
+// - Hard stop date: 31 Mar 2026 (inclusive)
+// - Uses OpenAI Chat Completions API (gpt-4.1-mini)
+
+async function parseJsonBody(req) {
+  // In many Vercel runtimes, req.body may already be an object.
+  if (req.body) {
+    if (typeof req.body === "string") {
+      return JSON.parse(req.body || "{}");
+    }
+    return req.body;
+  }
+
+  // Fallback: manual stream read (Node.js IncomingMessage)
+  return await new Promise((resolve, reject) => {
+    let data = "";
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
+    req.on("end", () => {
+      if (!data) {
+        resolve({});
+        return;
+      }
+      try {
+        resolve(JSON.parse(data));
+      } catch (err) {
+        reject(err);
+      }
+    });
+    req.on("error", (err) => reject(err));
+  });
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -12,7 +45,7 @@ export default async function handler(req, res) {
   if (!OPENAI_API_KEY) {
     res
       .status(500)
-      .json({ error: "Server misconfigured: missing API key." });
+      .json({ error: "Server misconfigured: missing OPENAI_API_KEY." });
     return;
   }
 
@@ -20,7 +53,10 @@ export default async function handler(req, res) {
   const EXPIRY_DATE = "2026-03-31";
   const now = new Date();
   const expiry = new Date(`${EXPIRY_DATE}T23:59:59Z`);
-  if (now > expiry) {
+
+  if (Number.isNaN(expiry.getTime())) {
+    console.error("Invalid EXPIRY_DATE configured:", EXPIRY_DATE);
+  } else if (now > expiry) {
     res.status(410).json({
       error:
         "This 2026 Auspicious Report campaign has ended. Please check back for future editions.",
@@ -28,20 +64,19 @@ export default async function handler(req, res) {
     return;
   }
 
-  let body = req.body || {};
-  if (typeof body === "string") {
-    try {
-      body = JSON.parse(body);
-    } catch (e) {
-      res.status(400).json({ error: "Invalid JSON body." });
-      return;
-    }
+  let body;
+  try {
+    body = await parseJsonBody(req);
+  } catch (err) {
+    console.error("Failed to parse JSON body:", err);
+    res.status(400).json({ error: "Invalid JSON body." });
+    return;
   }
 
-  const { dob, language } = body;
-  const lang = language === "zh" ? "zh" : "en";
+  const dob = typeof body.dob === "string" ? body.dob.trim() : "";
+  const lang = body.language === "zh" ? "zh" : "en";
 
-  if (!dob || typeof dob !== "string") {
+  if (!dob) {
     res.status(400).json({
       error:
         "Missing or invalid 'dob'. Please provide DDMMMYYYY (e.g. 08DEC1977).",
@@ -108,7 +143,7 @@ HTML requirements:
     );
 
     if (!response.ok) {
-      const text = await response.text();
+      const text = await response.text().catch(() => "");
       console.error("OpenAI API error:", response.status, text);
       res.status(502).json({
         error:
