@@ -1,440 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>2026 Auspicious Year Report</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --accent: #ff9100;
-      --accent-dark: #f57c00;
-      --bg-beige: #f3ecdd;
-      --do-green: #2e7d32;
-      --dont-red: #c62828;
-      --border-soft: #e0d4c0;
-      --text-main: #333333;
-      --text-muted: #666666;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>2026 Auspicious Year Report</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <style>
+      :root {
+        --bg: #fffaf2;
+        --card-bg: #ffffff;
+        --accent: #f5a623;
+        --accent-dark: #e18f09;
+        --text-main: #3e2723;
+        --muted: #6d4c41;
+        --error: #c62828;
+        --border-radius: 16px;
+      }
 
-    * {
-      box-sizing: border-box;
-    }
+      * {
+        box-sizing: border-box;
+      }
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: linear-gradient(#f7f3ea, #fdfbf7);
-      color: var(--text-main);
-    }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top, #ffe9c9 0, #fffaf2 40%);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .page {
-      max-width: 800px;
-      margin: 1.5rem auto 2.5rem;
-      padding: 0 1rem;
-    }
+      header {
+        text-align: center;
+        padding: 32px 16px 16px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
+      header h1 {
+        margin: 0 0 4px;
+        font-size: 2.2rem;
+      }
 
-    .subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 1.25rem;
-    }
+      header p {
+        margin: 0;
+        color: var(--muted);
+      }
 
-    .card {
-      background: #ffffff;
-      border-radius: 10px;
-      border: 1px solid var(--border-soft);
-      padding: 1rem 1.25rem 1.25rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-    }
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+      }
 
-    label {
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
+      .card {
+        background: var(--card-bg);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+        border-radius: var(--border-radius);
+        padding: 24px 24px 20px;
+        max-width: 720px;
+        width: 100%;
+        margin-bottom: 16px;
+      }
 
-    .dob-row {
-      margin-top: 0.35rem;
-      margin-bottom: 0.75rem;
-    }
+      .card p {
+        margin-top: 0;
+        line-height: 1.5;
+      }
 
-    #dob {
-      width: 100%;
-      padding: 0.55rem 0.6rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 0.95rem;
-    }
+      .notice {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 8px;
+      }
 
-    .actions {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
 
-    .primary-btn {
-      padding: 0.55rem 1.4rem;
-      border-radius: 999px;
-      border: none;
-      background: var(--accent);
-      color: #ffffff;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
-      transition: background 0.15s ease, transform 0.08s ease,
-        box-shadow 0.08s ease;
-    }
+      .primary-btn,
+      .lang-btn {
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background 0.15s ease, color 0.15s ease,
+          box-shadow 0.15s ease, border-color 0.15s ease,
+          transform 0.05s ease;
+      }
 
-    .primary-btn:hover {
-      background: var(--accent-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
-    }
+      .primary-btn {
+        background: var(--accent);
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(245, 166, 35, 0.35);
+      }
 
-    .primary-btn.disabled,
-    .primary-btn:disabled {
-      opacity: 0.6;
-      cursor: default;
-      box-shadow: none;
-      transform: none;
-    }
+      .primary-btn:hover {
+        background: var(--accent-dark);
+        transform: translateY(-1px);
+      }
 
-    .lang-btn {
-      padding: 0.45rem 0.9rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      background-color: #f5f5f5;
-      color: #333;
-      font-weight: 500;
-      font-size: 0.88rem;
-      cursor: pointer;
-      min-width: 74px;
-      text-align: center;
-    }
+      .primary-btn.disabled {
+        opacity: 0.6;
+        cursor: default;
+        box-shadow: none;
+        transform: none;
+      }
 
-    .lang-btn:hover {
-      background-color: #eeeeee;
-    }
+      .lang-btn {
+        background: #fff7eb;
+        color: var(--text-main);
+        border-color: #ffe1b8;
+      }
 
-    .lang-btn.selected {
-      background-color: var(--accent);
-      border-color: var(--accent);
-      color: #ffffff;
-    }
+      .lang-btn.selected {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent-dark);
+        box-shadow: 0 3px 8px rgba(245, 166, 35, 0.35);
+      }
 
-    .hidden {
-      display: none;
-    }
+      .dob-row {
+        margin-top: 12px;
+      }
 
-    .notice {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 0.2rem;
-    }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
 
-    .notice strong {
-      font-weight: 700;
-    }
+      input[type="text"] {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 999px;
+        border: 1px solid #e0c3a9;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
 
-    .error {
-      color: var(--dont-red);
-      margin-top: 0.35rem;
-      font-size: 0.85rem;
-    }
+      input[type="text"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.2);
+      }
 
-    #result {
-      margin-top: 1.25rem;
-      line-height: 1.55;
-    }
+      .error {
+        color: var(--error);
+        margin-top: 8px;
+        font-size: 0.9rem;
+      }
 
-    #result h2,
-    #result h3 {
-      margin-top: 1rem;
-      margin-bottom: 0.4rem;
-    }
+      .hidden {
+        display: none;
+      }
 
-    #result ul {
-      padding-left: 1.1rem;
-    }
+      #result {
+        max-width: 720px;
+        width: 100%;
+        margin-top: 8px;
+      }
 
-    #result li {
-      margin-bottom: 0.25rem;
-    }
+      #result .report-card {
+        background: #fffdf8;
+        border-radius: var(--border-radius);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        padding: 24px;
+      }
 
-    .expired-message {
-      padding: 0.75rem 0.9rem;
-      border-radius: 8px;
-      background-color: #fff3e0;
-      border: 1px solid #ffe0b2;
-    }
+      #result h2,
+      #result h3 {
+        margin-top: 0;
+        color: #4e342e;
+      }
 
-    .signature-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-top: 1.75rem;
-      background-color: #fff5e6;
-      border-radius: 10px;
-      border: 1px solid #f0dfc3;
-      padding: 0.9rem 1.2rem;
-    }
+      #result ul {
+        padding-left: 1.2rem;
+      }
 
-    .sig-text p {
-      margin: 0.15rem 0;
-      font-size: 0.9rem;
-    }
+      #result li {
+        margin-bottom: 4px;
+      }
 
-    .sig-text strong {
-      font-weight: 700;
-    }
-
-    .sig-logo img {
-      max-height: 80px;   /* bigger logo */
-      max-width: 180px;
-      width: auto;
-      display: block;
-    }
-
-    a {
-      color: #5c3bb1;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 560px) {
       .signature-card {
-        align-items: flex-start;
+        background: #fff3e0;
+        border-radius: var(--border-radius);
+        max-width: 720px;
+        width: 100%;
+        padding: 16px 20px;
+        margin: 24px auto 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.05);
+        font-size: 0.9rem;
       }
 
-      .sig-logo {
-        margin-left: auto;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="page">
-    <h1>2026 Auspicious Year Report</h1>
-    <p class="subtitle">
-      One-minute fortune reading. No sign-ups. No data stored.
-    </p>
-
-    <div class="card">
-      <label for="dob">
-        Enter your Date of Birth
-        <span style="font-weight:normal;">
-          (format <code>DDMMMYYYY</code>, e.g., <code>08DEC1977</code>)
-        </span>
-      </label>
-      <div class="dob-row">
-        <input
-          id="dob"
-          type="text"
-          maxlength="9"
-          placeholder="08DEC1977"
-          autocomplete="off"
-        />
-      </div>
-
-      <div class="actions">
-        <button id="getReportBtn" class="primary-btn">
-          Get My 2026 Report
-        </button>
-        <button id="langEnBtn" class="lang-btn hidden">English</button>
-        <button id="langZhBtn" class="lang-btn hidden">中文</button>
-      </div>
-
-      <div id="error" class="error"></div>
-
-      <p class="notice">
-        <strong>Notice &amp; Disclaimer:</strong>
-        Your date of birth enables the one-time 2026 Auspicious Report and is
-        not stored, shared, or used for marketing. Inputs are processed by
-        OpenAI in accordance with their
-        <a href="https://openai.com/policies/privacy-policy" target="_blank"
-          >Privacy Policy</a
-        >. No personal data is collected or retained by
-        <strong>Mike Lim</strong>.
-      </p>
-    </div>
-
-    <div id="result"></div>
-
-    <div class="signature-card">
-      <div class="sig-text" id="sigText">
-        <!-- default EN content will be injected by JS -->
-      </div>
-
-      <div class="sig-logo">
-        <!-- update src to your deployed logo path -->
-        <img src="sghc-full.png" alt="SGHomeCompass logo" />
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const dobInput = document.getElementById("dob");
-    const getReportBtn = document.getElementById("getReportBtn");
-    const langEnBtn = document.getElementById("langEnBtn");
-    const langZhBtn = document.getElementById("langZhBtn");
-    const errorEl = document.getElementById("error");
-    const resultEl = document.getElementById("result");
-    const sigTextEl = document.getElementById("sigText");
-
-    let selectedLanguage = null; // 'en' or 'zh'
-
-    // ----- Signature (advert) content in EN / ZH -----
-    const sigHtmlEn = `
-      <p>— Prepared by <strong>Mike Lim</strong>, CEA Reg No. R026708F</p>
-      <p>📞 +65 9692 9209</p>
-      <p><strong>SGHomeCompass</strong> | Your Chapter in Home Transition</p>
-      <p>
-        🔗
-        <a href="https://www.youtube.com/@SGHomeCompass" target="_blank">YouTube</a> |
-        <a href="https://www.instagram.com/sghomecompass/" target="_blank">Instagram</a>
-      </p>
-    `;
-
-    const sigHtmlZh = `
-      <p>— 由 <strong>Mike Lim</strong> 准备，CEA 注册号码 R026708F</p>
-      <p>📞 +65 9692 9209</p>
-      <p><strong>SGHomeCompass</strong> ｜ 您的居家过渡新篇章</p>
-      <p>
-        🔗
-        <a href="https://www.youtube.com/@SGHomeCompass" target="_blank">YouTube 频道</a> |
-        <a href="https://www.instagram.com/sghomecompass/" target="_blank">Instagram 专页</a>
-      </p>
-    `;
-
-    function setSignatureLanguage(lang) {
-      if (!sigTextEl) return;
-      sigTextEl.innerHTML = lang === "zh" ? sigHtmlZh : sigHtmlEn;
-    }
-
-    // ----- Helpers -----
-    function showError(msg) {
-      if (!errorEl) {
-        if (msg) alert(msg);
-        return;
-      }
-      errorEl.textContent = msg || "";
-    }
-
-    function resetLanguageState() {
-      selectedLanguage = null;
-      langEnBtn.classList.add("hidden");
-      langZhBtn.classList.add("hidden");
-      langEnBtn.classList.remove("selected");
-      langZhBtn.classList.remove("selected");
-      getReportBtn.disabled = false;
-      getReportBtn.classList.remove("disabled");
-    }
-
-    // ----- Button behaviour -----
-
-    // 1) User clicks main button → validate DoB → show EN / 中文
-    getReportBtn.addEventListener("click", () => {
-      const dob = dobInput.value.trim();
-      if (!dob) {
-        showError("Please enter your date of birth in DDMMMYYYY format first.");
-        return;
+      .signature-card a {
+        color: #1565c0;
+        text-decoration: none;
       }
 
-      showError("");
-      getReportBtn.disabled = true;
-      getReportBtn.classList.add("disabled");
-
-      langEnBtn.classList.remove("hidden");
-      langZhBtn.classList.remove("hidden");
-    });
-
-    // 2) User taps English / 中文 → set language + call API
-    langEnBtn.addEventListener("click", () => handleLanguageClick("en"));
-    langZhBtn.addEventListener("click", () => handleLanguageClick("zh"));
-
-    function handleLanguageClick(lang) {
-      selectedLanguage = lang;
-      langEnBtn.classList.toggle("selected", lang === "en");
-      langZhBtn.classList.toggle("selected", lang === "zh");
-      setSignatureLanguage(lang); // switch footer language
-      generateReport();
-    }
-
-    async function generateReport() {
-      const dob = dobInput.value.trim();
-      if (!dob) {
-        showError("Please enter your date of birth.");
-        return;
-      }
-      if (!selectedLanguage) {
-        showError("Please choose English or 中文.");
-        return;
+      .signature-card a:hover {
+        text-decoration: underline;
       }
 
-      if (resultEl) {
-        resultEl.innerHTML = "Generating your 2026 report…";
+      .sig-logo img {
+        max-height: 52px;
+        width: auto;
       }
-      showError("");
 
-      try {
-        const resp = await fetch("/api/fortune", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dob, language: selectedLanguage }),
-        });
-
-        if (!resp.ok) {
-          throw new Error("Server error. Please try again in a while.");
+      @media (max-width: 640px) {
+        header h1 {
+          font-size: 1.7rem;
         }
 
-        const data = await resp.json();
-        const html = data.html || data.result || "";
-        resultEl.innerHTML = html;
-        colorizeDosDonts();
-      } catch (err) {
-        showError(err.message || "Something went wrong. Please try again.");
-        if (resultEl) resultEl.innerHTML = "";
+        .card {
+          padding: 20px 16px 18px;
+        }
+
+        .signature-card {
+          flex-direction: column-reverse;
+          align-items: flex-start;
+        }
+
+        .sig-logo img {
+          max-height: 44px;
+        }
       }
-    }
+    </style>
+  </head>
 
-    // Reset language options when DOB changes
-    dobInput.addEventListener("input", () => {
-      resetLanguageState();
-    });
+  <body>
+    <header>
+      <h1>2026 Auspicious Year Report</h1>
+      <p>One-minute reading. No sign-ups. No data stored.</p>
+    </header>
 
-    // 4) Colour Do / Don't bullets
-    function colorizeDosDonts() {
-      if (!resultEl) return;
-      const items = resultEl.querySelectorAll("li");
-      items.forEach((li) => {
-        const text = (li.textContent || "").trim().toLowerCase();
-        if (text.startsWith("do:")) {
-          li.style.color = "#2e7d32"; // green
-        } else if (text.startsWith("don't:") || text.startsWith("dont:")) {
-          li.style.color = "#c62828"; // red
+    <main>
+      <!-- Step 1: Language selection + intro -->
+      <div class="card" id="languageCard">
+        <p>
+          Start by choosing your preferred language for this free 2026
+          Auspicious Year Report. It’s a light-hearted reading meant for
+          reflection and fun, not a fixed prediction of your life.
+        </p>
+
+        <p class="notice" id="introEn">
+          This tool only uses your date of birth to generate a short 2026
+          reading. It does not store, sell, or share your details. Please pick
+          English or Chinese first so that the notice and report appear in your
+          chosen language.
+        </p>
+
+        <p class="notice hidden" id="introZh">
+          这个小工具只会根据您的出生日期生成一份 2026 年运势小读物，不会储存、出售或分享您的资料。
+          请先选择英文或中文，让声明和报告以您偏好的语言呈现。
+        </p>
+
+        <div class="actions">
+          <button id="langEnBtn" class="lang-btn">English</button>
+          <button id="langZhBtn" class="lang-btn">中文</button>
+        </div>
+      </div>
+
+      <!-- Step 2: DoB input + PDPA notice (shown after language is chosen) -->
+      <div class="card hidden" id="inputCard">
+        <label id="dobLabel" for="dob">
+          Enter your Date of Birth
+          <span style="font-weight: normal">
+            (format <code>DDMMMYYYY</code>, e.g., <code>08DEC1977</code>)
+          </span>
+        </label>
+        <div class="dob-row">
+          <input
+            id="dob"
+            type="text"
+            maxlength="9"
+            placeholder="08DEC1977"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="actions">
+          <button id="getReportBtn" class="primary-btn">
+            Get My 2026 Report
+          </button>
+        </div>
+
+        <div id="error" class="error"></div>
+
+        <p class="notice" id="noticeEn">
+          <strong>Notice &amp; Disclaimer:</strong> Your date of birth enables
+          this 2026 Auspicious Year Report and is not stored, shared, or used
+          for marketing. Inputs are processed by OpenAI in accordance with their
+          <a
+            href="https://openai.com/policies/privacy-policy"
+            target="_blank"
+            >Privacy Policy</a
+          >. No personal data is collected or retained by
+          <strong>Mike Lim</strong>. This reading is for reflection and
+          entertainment, not medical, financial, or legal advice.
+        </p>
+
+        <p class="notice hidden" id="noticeZh">
+          <strong>声明与免责声明：</strong>
+          您的出生日期只用于生成本次 2026 运势报告，不会被储存、分享或用于市场推广。
+          输入资料由 OpenAI 依照其
+          <a
+            href="https://openai.com/policies/privacy-policy"
+            target="_blank"
+            >隐私政策</a
+          >
+          进行处理。<strong>Mike Lim</strong> 不会收集或保留任何可识别个人身份的数据。本报告仅供参考与自我反思，并非医疗、财务或法律意见。
+        </p>
+      </div>
+
+      <div id="result"></div>
+
+      <div class="signature-card">
+        <div class="sig-text" id="sigText"></div>
+        <div class="sig-logo">
+          <!-- logo file already in your repo -->
+          <img src="sghc-full.png" alt="SGHomeCompass logo" />
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const languageCard = document.getElementById("languageCard");
+      const inputCard = document.getElementById("inputCard");
+
+      const dobInput = document.getElementById("dob");
+      const getReportBtn = document.getElementById("getReportBtn");
+      const errorEl = document.getElementById("error");
+      const resultEl = document.getElementById("result");
+      const sigTextEl = document.getElementById("sigText");
+
+      const introEn = document.getElementById("introEn");
+      const introZh = document.getElementById("introZh");
+      const noticeEn = document.getElementById("noticeEn");
+      const noticeZh = document.getElementById("noticeZh");
+      const dobLabel = document.getElementById("dobLabel");
+
+      const langEnBtn = document.getElementById("langEnBtn");
+      const langZhBtn = document.getElementById("langZhBtn");
+
+      let selectedLanguage = null; // 'en' or 'zh'
+
+      const EN_LIMIT_KEY = "sghc2026_en_used";
+      const ZH_LIMIT_KEY = "sghc2026_zh_used";
+
+      // ----- Signature (advert) content in EN / ZH -----
+      const sigHtmlEn = `
+        <p>— Prepared by <strong>Mike Lim</strong>, CEA Reg No. R026708F</p>
+        <p>📞 +65 9692 9209</p>
+        <p><strong>SGHomeCompass</strong> | Your Chapter in Home Transition</p>
+        <p>
+          🔗
+          <a href="https://www.youtube.com/@SGHomeCompass" target="_blank">YouTube</a> |
+          <a href="https://www.instagram.com/sghomecompass/" target="_blank">Instagram</a>
+        </p>
+      `;
+
+      const sigHtmlZh = `
+        <p>— 由 <strong>林祉强</strong> 准备，CEA 注册号码 R026708F</p>
+        <p>📞 +65 9692 9209</p>
+        <p><strong>SGHomeCompass</strong> ｜ 您的居家过渡新篇章</p>
+        <p>
+          🔗
+          <a href="https://www.youtube.com/@SGHomeCompass" target="_blank">YouTube 频道</a> |
+          <a href="https://www.instagram.com/sghomecompass/" target="_blank">Instagram 专页</a>
+        </p>
+      `;
+
+      function setSignatureLanguage(lang) {
+        if (!sigTextEl) return;
+        sigTextEl.innerHTML = lang === "zh" ? sigHtmlZh : sigHtmlEn;
+      }
+
+      // ----- Helpers -----
+      function showError(msg) {
+        if (!errorEl) return;
+        errorEl.textContent = msg || "";
+      }
+
+      function setLanguage(lang) {
+        selectedLanguage = lang;
+
+        langEnBtn.classList.toggle("selected", lang === "en");
+        langZhBtn.classList.toggle("selected", lang === "zh");
+
+        // Switch intro + PDPA text
+        if (lang === "zh") {
+          introEn.classList.add("hidden");
+          introZh.classList.remove("hidden");
+          noticeEn.classList.add("hidden");
+          noticeZh.classList.remove("hidden");
+          dobLabel.innerHTML = `请输入您的出生日期 <span style="font-weight: normal;">（格式 <code>DDMMMYYYY</code>，例如 <code>08DEC1977</code>）</span>`;
+          getReportBtn.textContent = "生成我的 2026 运势报告";
+        } else {
+          introEn.classList.remove("hidden");
+          introZh.classList.add("hidden");
+          noticeEn.classList.remove("hidden");
+          noticeZh.classList.add("hidden");
+          dobLabel.innerHTML = `Enter your Date of Birth <span style="font-weight: normal;">(format <code>DDMMMYYYY</code>, e.g., <code>08DEC1977</code>)</span>`;
+          getReportBtn.textContent = "Get My 2026 Report";
+        }
+
+        setSignatureLanguage(lang);
+
+        // Reveal the DOB card
+        inputCard.classList.remove("hidden");
+      }
+
+      function hasReachedLimit(lang) {
+        if (lang === "zh") {
+          return !!localStorage.getItem(ZH_LIMIT_KEY);
+        }
+        return !!localStorage.getItem(EN_LIMIT_KEY);
+      }
+
+      function markUsed(lang) {
+        if (lang === "zh") {
+          localStorage.setItem(ZH_LIMIT_KEY, Date.now().toString());
+        } else {
+          localStorage.setItem(EN_LIMIT_KEY, Date.now().toString());
+        }
+      }
+
+      function getLimitMessage(lang) {
+        if (lang === "zh") {
+          return "为了让更多人免费使用，这个工具每位访客只可生成一份英文报告和一份中文报告。如果您已经获取了自己的报告，欢迎把链接分享给亲友，让他们也试试看 2026 运势 😊";
+        }
+        return "To keep this free tool open for everyone, each visitor can generate one English and one Chinese report. If you’ve already gotten yours, please share this link with friends who might enjoy their own 2026 reading 😊";
+      }
+
+      // ----- Event wiring -----
+      langEnBtn.addEventListener("click", () => setLanguage("en"));
+      langZhBtn.addEventListener("click", () => setLanguage("zh"));
+
+      getReportBtn.addEventListener("click", async () => {
+        const dob = (dobInput.value || "").trim();
+
+        if (!selectedLanguage) {
+          showError("Please choose your preferred language first.");
+          return;
+        }
+        if (!dob) {
+          showError("Please enter your date of birth in DDMMMYYYY format.");
+          return;
+        }
+
+        if (hasReachedLimit(selectedLanguage)) {
+          showError(getLimitMessage(selectedLanguage));
+          return;
+        }
+
+        showError("");
+        resultEl.innerHTML = "";
+        getReportBtn.disabled = true;
+        getReportBtn.classList.add("disabled");
+
+        try {
+          const resp = await fetch("/api/fortune", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ dob, language: selectedLanguage }),
+          });
+
+          if (!resp.ok) {
+            let msg = "Server error. Please try again in a while.";
+            try {
+              const data = await resp.json();
+              if (data && data.error) msg = data.error;
+            } catch (_) {
+              // ignore JSON parse error
+            }
+            throw new Error(msg);
+          }
+
+          const data = await resp.json();
+          const html = data.html || data.result || "";
+          if (!html) {
+            throw new Error(
+              "The report could not be generated. Please try again."
+            );
+          }
+
+          resultEl.innerHTML = `<div class="report-card">${html}</div>`;
+          colorizeDosDonts();
+          markUsed(selectedLanguage);
+        } catch (err) {
+          showError(err.message || "Something went wrong. Please try again.");
+          resultEl.innerHTML = "";
+        } finally {
+          getReportBtn.disabled = false;
+          getReportBtn.classList.remove("disabled");
         }
       });
-    }
 
-    // Initialise footer as English on first load
-    setSignatureLanguage("en");
-  </script>
-</body>
+      // Colour Do / Don't bullets
+      function colorizeDosDonts() {
+        if (!resultEl) return;
+        const items = resultEl.querySelectorAll("li");
+        items.forEach((li) => {
+          const text = (li.textContent || "").trim().toLowerCase();
+          if (text.startsWith("do:")) {
+            li.style.color = "#2e7d32";
+          } else if (text.startsWith("don't:") || text.startsWith("dont:")) {
+            li.style.color = "#c62828";
+          }
+        });
+      }
+
+      // Initialise footer as English on first load
+      setSignatureLanguage("en");
+    </script>
+  </body>
 </html>
