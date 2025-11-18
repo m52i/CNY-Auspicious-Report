@@ -394,7 +394,7 @@
       showError("");
 
       try {
-        const resp = await fetch("/.netlify/functions/fortune", {
+        const resp = await fetch("/api/fortune", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ dob, language: selectedLanguage }),
