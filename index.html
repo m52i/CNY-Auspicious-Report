@@ -223,7 +223,7 @@
       }
 
       .sig-logo img {
-        max-height: 52px;
+        max-height: 95px; /* Increased size for SGHomeCompass logo */
         width: auto;
       }
 
@@ -243,7 +243,7 @@
         }
 
         .sig-logo img {
-          max-height: 44px;
+          max-height: 85px;
         }
       }
     </style>
@@ -328,7 +328,7 @@
             target="_blank"
             >隐私政策</a
           >
-          进行处理。<strong>林祉强</strong> 不会收集或保留任何可识别个人身份的数据。
+          进行处理。<strong>Mike Lim</strong> 不会收集或保留任何可识别个人身份的数据。
           本报告仅供参考与自我反思，并非医疗、财务或法律意见。
         </p>
       </div>
@@ -385,7 +385,7 @@
       `;
 
       const sigHtmlZh = `
-        <p>— 由 <strong>林祉强</strong> 准备，CEA 注册号码 R026708F</p>
+        <p>— 由 <strong>Mike Lim</strong> 准备，CEA 注册号码 R026708F</p>
         <p>📞 +65 9692 9209</p>
         <p><strong>SGHomeCompass</strong> ｜ 您的居家过渡新篇章</p>
         <p>
@@ -419,6 +419,7 @@
           // Intro + prompts
           introEn.classList.add("hidden");
           introZh.classList.remove("hidden");
+
           langPromptEn.classList.add("hidden");
           langPromptZh.classList.remove("hidden");
 
@@ -436,6 +437,7 @@
 
           introEn.classList.remove("hidden");
           introZh.classList.add("hidden");
+
           langPromptEn.classList.remove("hidden");
           langPromptZh.classList.add("hidden");
 
@@ -444,7 +446,7 @@
 
           dobLabel.innerHTML =
             'Enter your Date of Birth <span style="font-weight: normal;">(format <code>DDMMMYYYY</code>, e.g., <code>08DEC1977</code>)</span>';
-          getReportBtn.textContent = "Get My 2026 Year of the Horse Auspicious Report";
+          getReportBtn.textContent = "Get My 2026 Year of the Horse Report";
         }
 
         setSignatureLanguage(lang);
@@ -470,7 +472,7 @@
         if (lang === "zh") {
           return "为了让更多人免费使用，这个工具每位访客只可生成一份英文报告和一份中文报告。如果您已经获取了自己的报告，欢迎把链接分享给亲友，让他们也试试看 2026 马年运势 😊";
         }
-        return "To keep this free tool open for everyone, each visitor can generate one English and one Chinese report. If you've already received yours, please share this link with friends who might enjoy their own 2026 Year of the Horse Auspicious Report 😊";
+        return "To keep this free tool open for everyone, each visitor can generate one English and one Chinese report. If you've already received yours, please share this link with friends who might enjoy their own 2026 Year of the Horse reading 😊";
       }
 
       langEnBtn.addEventListener("click", () => setLanguage("en"));
