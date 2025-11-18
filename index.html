@@ -3,10 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>2026 Auspicious Year Report</title>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       :root {
         --bg: #fffaf2;
@@ -16,7 +13,7 @@
         --text-main: #3e2723;
         --muted: #6d4c41;
         --error: #c62828;
-        --border-radius: 16px;
+        --border-radius: 18px;
       }
 
       * {
@@ -36,17 +33,18 @@
 
       header {
         text-align: center;
-        padding: 32px 16px 16px;
+        padding: 32px 16px 8px;
       }
 
       header h1 {
-        margin: 0 0 4px;
+        margin: 0 0 6px;
         font-size: 2.2rem;
       }
 
       header p {
         margin: 0;
         color: var(--muted);
+        font-size: 0.98rem;
       }
 
       main {
@@ -64,7 +62,8 @@
         padding: 24px 24px 20px;
         max-width: 720px;
         width: 100%;
-        margin-bottom: 16px;
+        margin-top: 16px;
+        text-align: center;
       }
 
       .card p {
@@ -75,22 +74,23 @@
       .notice {
         font-size: 0.85rem;
         color: var(--muted);
-        margin-top: 8px;
+        margin-top: 10px;
       }
 
       .actions {
         display: flex;
-        gap: 12px;
+        justify-content: center;
+        gap: 16px;
         flex-wrap: wrap;
-        margin-top: 16px;
+        margin-top: 18px;
       }
 
       .primary-btn,
       .lang-btn {
-        padding: 10px 18px;
+        padding: 11px 22px;
         border-radius: 999px;
         border: 1px solid transparent;
-        font-size: 0.95rem;
+        font-size: 0.98rem;
         cursor: pointer;
         transition: background 0.15s ease, color 0.15s ease,
           box-shadow 0.15s ease, border-color 0.15s ease,
@@ -117,9 +117,11 @@
       }
 
       .lang-btn {
+        min-width: 130px;
         background: #fff7eb;
         color: var(--text-main);
         border-color: #ffe1b8;
+        font-weight: 600;
       }
 
       .lang-btn.selected {
@@ -130,7 +132,7 @@
       }
 
       .dob-row {
-        margin-top: 12px;
+        margin-top: 16px;
       }
 
       label {
@@ -141,12 +143,15 @@
 
       input[type="text"] {
         width: 100%;
-        padding: 10px 12px;
+        max-width: 360px;
+        padding: 10px 14px;
         border-radius: 999px;
         border: 1px solid #e0c3a9;
         font-size: 0.95rem;
         outline: none;
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        margin: 0 auto;
+        text-align: center;
       }
 
       input[type="text"]:focus {
@@ -156,7 +161,7 @@
 
       .error {
         color: var(--error);
-        margin-top: 8px;
+        margin-top: 10px;
         font-size: 0.9rem;
       }
 
@@ -181,10 +186,11 @@
       #result h3 {
         margin-top: 0;
         color: #4e342e;
+        text-align: center;
       }
 
       #result ul {
-        padding-left: 1.2rem;
+        padding-left: 1.4rem;
       }
 
       #result li {
@@ -204,6 +210,7 @@
         gap: 16px;
         box-shadow: 0 10px 28px rgba(0, 0, 0, 0.05);
         font-size: 0.9rem;
+        text-align: left;
       }
 
       .signature-card a {
@@ -226,12 +233,13 @@
         }
 
         .card {
-          padding: 20px 16px 18px;
+          padding: 20px 18px 18px;
         }
 
         .signature-card {
           flex-direction: column-reverse;
           align-items: flex-start;
+          text-align: left;
         }
 
         .sig-logo img {
@@ -243,29 +251,26 @@
 
   <body>
     <header>
-      <h1>2026 Auspicious Year Report</h1>
-      <p>One-minute reading. No sign-ups. No data stored.</p>
+      <h1 id="mainTitle">2026 Auspicious Year Report</h1>
+      <p id="subTitle">One-minute reading. No sign-ups. No data stored.</p>
     </header>
 
     <main>
-      <!-- Step 1: Language selection + intro -->
+      <!-- Step 1: Language selection -->
       <div class="card" id="languageCard">
-        <p>
-          Start by choosing your preferred language for this free 2026
-          Auspicious Year Report. It’s a light-hearted reading meant for
-          reflection and fun, not a fixed prediction of your life.
+        <p id="introEn">
+          This light-hearted reading is meant for personal reflection and
+          entertainment, not a fixed prediction of your life.
+        </p>
+        <p class="hidden" id="introZh">
+          本轻松读物仅供个人反思与娱乐参考，并非对您人生的固定预言。
         </p>
 
-        <p class="notice" id="introEn">
-          This tool only uses your date of birth to generate a short 2026
-          reading. It does not store, sell, or share your details. Please pick
-          English or Chinese first so that the notice and report appear in your
-          chosen language.
+        <p class="notice" id="langPromptEn">
+          Please choose your preferred language.
         </p>
-
-        <p class="notice hidden" id="introZh">
-          这个小工具只会根据您的出生日期生成一份 2026 年运势小读物，不会储存、出售或分享您的资料。
-          请先选择英文或中文，让声明和报告以您偏好的语言呈现。
+        <p class="notice hidden" id="langPromptZh">
+          请选择您偏好的语言。
         </p>
 
         <div class="actions">
@@ -274,7 +279,7 @@
         </div>
       </div>
 
-      <!-- Step 2: DoB input + PDPA notice (shown after language is chosen) -->
+      <!-- Step 2: DoB input + PDPA (appears after language selection) -->
       <div class="card hidden" id="inputCard">
         <label id="dobLabel" for="dob">
           Enter your Date of Birth
@@ -294,35 +299,37 @@
 
         <div class="actions">
           <button id="getReportBtn" class="primary-btn">
-            Get My 2026 Report
+            Get My 2026 Year Report
           </button>
         </div>
 
         <div id="error" class="error"></div>
 
         <p class="notice" id="noticeEn">
-          <strong>Notice &amp; Disclaimer:</strong> Your date of birth enables
-          this 2026 Auspicious Year Report and is not stored, shared, or used
-          for marketing. Inputs are processed by OpenAI in accordance with their
+          <strong>Notice &amp; Disclaimer:</strong>
+          Your date of birth enables this 2026 Auspicious Year Report and is not
+          stored, shared, or used for marketing. Inputs are processed by OpenAI
+          in accordance with their
           <a
             href="https://openai.com/policies/privacy-policy"
             target="_blank"
             >Privacy Policy</a
           >. No personal data is collected or retained by
-          <strong>Mike Lim</strong>. This reading is for reflection and
+          <strong>Mike Lim</strong>. This reading is meant for reflection and
           entertainment, not medical, financial, or legal advice.
         </p>
 
         <p class="notice hidden" id="noticeZh">
           <strong>声明与免责声明：</strong>
-          您的出生日期只用于生成本次 2026 运势报告，不会被储存、分享或用于市场推广。
+          您的出生日期只用于生成本次 <strong>2026 马年运势报告</strong>，不会被储存、分享或用于市场推广。
           输入资料由 OpenAI 依照其
           <a
             href="https://openai.com/policies/privacy-policy"
             target="_blank"
             >隐私政策</a
           >
-          进行处理。<strong>林祉强</strong> 不会收集或保留任何可识别个人身份的数据。本报告仅供参考与自我反思，并非医疗、财务或法律意见。
+          进行处理。<strong>林祉强</strong> 不会收集或保留任何可识别个人身份的数据。
+          本报告仅供参考与自我反思，并非医疗、财务或法律意见。
         </p>
       </div>
 
@@ -331,13 +338,15 @@
       <div class="signature-card">
         <div class="sig-text" id="sigText"></div>
         <div class="sig-logo">
-          <!-- logo file already in your repo -->
           <img src="sghc-full.png" alt="SGHomeCompass logo" />
         </div>
       </div>
     </main>
 
     <script>
+      const mainTitle = document.getElementById("mainTitle");
+      const subTitle = document.getElementById("subTitle");
+
       const languageCard = document.getElementById("languageCard");
       const inputCard = document.getElementById("inputCard");
 
@@ -349,6 +358,8 @@
 
       const introEn = document.getElementById("introEn");
       const introZh = document.getElementById("introZh");
+      const langPromptEn = document.getElementById("langPromptEn");
+      const langPromptZh = document.getElementById("langPromptZh");
       const noticeEn = document.getElementById("noticeEn");
       const noticeZh = document.getElementById("noticeZh");
       const dobLabel = document.getElementById("dobLabel");
@@ -361,7 +372,7 @@
       const EN_LIMIT_KEY = "sghc2026_en_used";
       const ZH_LIMIT_KEY = "sghc2026_zh_used";
 
-      // ----- Signature (advert) content in EN / ZH -----
+      // ----- Signature content -----
       const sigHtmlEn = `
         <p>— Prepared by <strong>Mike Lim</strong>, CEA Reg No. R026708F</p>
         <p>📞 +65 9692 9209</p>
@@ -389,7 +400,6 @@
         sigTextEl.innerHTML = lang === "zh" ? sigHtmlZh : sigHtmlEn;
       }
 
-      // ----- Helpers -----
       function showError(msg) {
         if (!errorEl) return;
         errorEl.textContent = msg || "";
@@ -401,26 +411,43 @@
         langEnBtn.classList.toggle("selected", lang === "en");
         langZhBtn.classList.toggle("selected", lang === "zh");
 
-        // Switch intro + PDPA text
         if (lang === "zh") {
+          // Header & subtitle
+          mainTitle.textContent = "2026 马年运势报告";
+          subTitle.textContent = "一分钟轻松解读。无需登入。不储存资料。";
+
+          // Intro + prompts
           introEn.classList.add("hidden");
           introZh.classList.remove("hidden");
+          langPromptEn.classList.add("hidden");
+          langPromptZh.classList.remove("hidden");
+
+          // PDPA
           noticeEn.classList.add("hidden");
           noticeZh.classList.remove("hidden");
-          dobLabel.innerHTML = `请输入您的出生日期 <span style="font-weight: normal;">（格式 <code>DDMMMYYYY</code>，例如 <code>08DEC1977</code>）</span>`;
-          getReportBtn.textContent = "生成我的 2026 运势报告";
+
+          // DoB label & button
+          dobLabel.innerHTML =
+            '请输入您的出生日期 <span style="font-weight: normal;">（格式 <code>DDMMMYYYY</code>，例如 <code>08DEC1977</code>）</span>';
+          getReportBtn.textContent = "生成我的 2026 马年运势报告";
         } else {
+          mainTitle.textContent = "2026 Auspicious Year Report";
+          subTitle.textContent = "One-minute reading. No sign-ups. No data stored.";
+
           introEn.classList.remove("hidden");
           introZh.classList.add("hidden");
+          langPromptEn.classList.remove("hidden");
+          langPromptZh.classList.add("hidden");
+
           noticeEn.classList.remove("hidden");
           noticeZh.classList.add("hidden");
-          dobLabel.innerHTML = `Enter your Date of Birth <span style="font-weight: normal;">(format <code>DDMMMYYYY</code>, e.g., <code>08DEC1977</code>)</span>`;
-          getReportBtn.textContent = "Get My 2026 Report";
+
+          dobLabel.innerHTML =
+            'Enter your Date of Birth <span style="font-weight: normal;">(format <code>DDMMMYYYY</code>, e.g., <code>08DEC1977</code>)</span>';
+          getReportBtn.textContent = "Get My 2026 Year of the Horse Auspicious Report";
         }
 
         setSignatureLanguage(lang);
-
-        // Reveal the DOB card
         inputCard.classList.remove("hidden");
       }
 
@@ -441,12 +468,11 @@
 
       function getLimitMessage(lang) {
         if (lang === "zh") {
-          return "为了让更多人免费使用，这个工具每位访客只可生成一份英文报告和一份中文报告。如果您已经获取了自己的报告，欢迎把链接分享给亲友，让他们也试试看 2026 运势 😊";
+          return "为了让更多人免费使用，这个工具每位访客只可生成一份英文报告和一份中文报告。如果您已经获取了自己的报告，欢迎把链接分享给亲友，让他们也试试看 2026 马年运势 😊";
         }
-        return "To keep this free tool open for everyone, each visitor can generate one English and one Chinese report. If you’ve already gotten yours, please share this link with friends who might enjoy their own 2026 reading 😊";
+        return "To keep this free tool open for everyone, each visitor can generate one English and one Chinese report. If you've already received yours, please share this link with friends who might enjoy their own 2026 Year of the Horse Auspicious Report 😊";
       }
 
-      // ----- Event wiring -----
       langEnBtn.addEventListener("click", () => setLanguage("en"));
       langZhBtn.addEventListener("click", () => setLanguage("zh"));
 
@@ -484,9 +510,7 @@
             try {
               const data = await resp.json();
               if (data && data.error) msg = data.error;
-            } catch (_) {
-              // ignore JSON parse error
-            }
+            } catch (_) {}
             throw new Error(msg);
           }
 
@@ -510,7 +534,6 @@
         }
       });
 
-      // Colour Do / Don't bullets
       function colorizeDosDonts() {
         if (!resultEl) return;
         const items = resultEl.querySelectorAll("li");
@@ -524,7 +547,7 @@
         });
       }
 
-      // Initialise footer as English on first load
+      // Default signature: English
       setSignatureLanguage("en");
     </script>
   </body>
