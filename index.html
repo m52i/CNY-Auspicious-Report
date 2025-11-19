@@ -63,6 +63,9 @@
         max-width: 720px;
         width: 100%;
         margin-top: 16px;
+      }
+
+      .card.center {
         text-align: center;
       }
 
@@ -77,12 +80,29 @@
         margin-top: 10px;
       }
 
-      .actions {
+      .lang-row {
         display: flex;
+        flex-wrap: wrap;
         justify-content: center;
         gap: 16px;
-        flex-wrap: wrap;
-        margin-top: 18px;
+        margin-top: 16px;
+      }
+
+      .lang-tile {
+        flex: 1 1 220px;
+        max-width: 260px;
+        background: #ffeede;
+        border-radius: 20px;
+        border: 1px solid #f1c9a0;
+        padding: 16px 14px 18px;
+        text-align: center;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+      }
+
+      .lang-tile-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 10px;
       }
 
       .primary-btn,
@@ -118,27 +138,29 @@
 
       .lang-btn {
         min-width: 130px;
-        background: #fff7eb;
-        color: var(--text-main);
-        border-color: #ffe1b8;
-        font-weight: 600;
+        background: #ffb686;
+        color: #fff;
+        border-color: #ff9b5d;
+        font-weight: 700;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
       }
 
       .lang-btn.selected {
-        background: var(--accent);
-        color: #fff;
+        background: var(--accent-dark);
         border-color: var(--accent-dark);
-        box-shadow: 0 3px 8px rgba(245, 166, 35, 0.35);
+        box-shadow: 0 3px 8px rgba(245, 166, 35, 0.45);
       }
 
       .dob-row {
         margin-top: 16px;
+        text-align: center;
       }
 
       label {
         display: block;
         font-weight: 600;
         margin-bottom: 4px;
+        text-align: center;
       }
 
       input[type="text"] {
@@ -159,10 +181,17 @@
         box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.2);
       }
 
+      .actions.center {
+        display: flex;
+        justify-content: center;
+        margin-top: 18px;
+      }
+
       .error {
         color: var(--error);
         margin-top: 10px;
         font-size: 0.9rem;
+        text-align: center;
       }
 
       .hidden {
@@ -223,7 +252,7 @@
       }
 
       .sig-logo img {
-        max-height: 95px; /* Increased size for SGHomeCompass logo */
+        max-height: 95px; /* enlarged logo */
         width: auto;
       }
 
@@ -256,8 +285,8 @@
     </header>
 
     <main>
-      <!-- Step 1: Language selection -->
-      <div class="card" id="languageCard">
+      <!-- Intro + language row (Option C layout) -->
+      <div class="card center" id="languageCard">
         <p id="introEn">
           This light-hearted reading is meant for personal reflection and
           entertainment, not a fixed prediction of your life.
@@ -266,21 +295,27 @@
           本轻松读物仅供个人反思与娱乐参考，并非对您人生的固定预言。
         </p>
 
-        <p class="notice" id="langPromptEn">
-          Please choose your preferred language.
-        </p>
-        <p class="notice hidden" id="langPromptZh">
-          请选择您偏好的语言。
-        </p>
+        <div class="lang-row">
+          <!-- English tile -->
+          <div class="lang-tile" id="langTileEn">
+            <div class="lang-tile-title" id="langPromptEn">
+              Please choose your preferred language.
+            </div>
+            <button id="langEnBtn" class="lang-btn">English</button>
+          </div>
 
-        <div class="actions">
-          <button id="langEnBtn" class="lang-btn">English</button>
-          <button id="langZhBtn" class="lang-btn">中文</button>
+          <!-- Chinese tile -->
+          <div class="lang-tile" id="langTileZh">
+            <div class="lang-tile-title hidden" id="langPromptZh">
+              请选择您偏好的语言。
+            </div>
+            <button id="langZhBtn" class="lang-btn">中文</button>
+          </div>
         </div>
       </div>
 
       <!-- Step 2: DoB input + PDPA (appears after language selection) -->
-      <div class="card hidden" id="inputCard">
+      <div class="card center hidden" id="inputCard">
         <label id="dobLabel" for="dob">
           Enter your Date of Birth
           <span style="font-weight: normal">
@@ -297,7 +332,7 @@
           />
         </div>
 
-        <div class="actions">
+        <div class="actions center">
           <button id="getReportBtn" class="primary-btn">
             Get My 2026 Year Report
           </button>
@@ -328,7 +363,7 @@
             target="_blank"
             >隐私政策</a
           >
-          进行处理。<strong>Mike Lim</strong> 不会收集或保留任何可识别个人身份的数据。
+          进行处理。<strong>林祉强</strong> 不会收集或保留任何可识别个人身份的数据。
           本报告仅供参考与自我反思，并非医疗、财务或法律意见。
         </p>
       </div>
@@ -347,7 +382,6 @@
       const mainTitle = document.getElementById("mainTitle");
       const subTitle = document.getElementById("subTitle");
 
-      const languageCard = document.getElementById("languageCard");
       const inputCard = document.getElementById("inputCard");
 
       const dobInput = document.getElementById("dob");
@@ -385,7 +419,7 @@
       `;
 
       const sigHtmlZh = `
-        <p>— 由 <strong>Mike Lim</strong> 准备，CEA 注册号码 R026708F</p>
+        <p>— 由 <strong>林祉强</strong> 准备，CEA 注册号码 R026708F</p>
         <p>📞 +65 9692 9209</p>
         <p><strong>SGHomeCompass</strong> ｜ 您的居家过渡新篇章</p>
         <p>
@@ -451,6 +485,7 @@
 
         setSignatureLanguage(lang);
         inputCard.classList.remove("hidden");
+        inputCard.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
       function hasReachedLimit(lang) {
