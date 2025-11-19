@@ -98,20 +98,20 @@
         text-align: center;
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
 
-        /* NEW: keep title + button aligned nicely */
+        /* keep title + button aligned nicely */
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
-      }  
+      }
 
       .lang-tile-title {
         font-size: 0.95rem;
         font-weight: 600;
         margin-bottom: 10px;
 
-        /* NEW: ensures both tiles reserve similar space for text */
-        min-height: 2.6em; /* tweak between 2.4–2.8em if you want */
+        /* ensure both tiles reserve similar space for text */
+        min-height: 2.6em; /* tweak between 2.4–2.8em if desired */
       }
 
       .primary-btn,
@@ -260,8 +260,12 @@
         text-decoration: underline;
       }
 
+      .sig-text {
+        flex: 1;
+      }
+
       .sig-logo img {
-        max-height: 95px; /* enlarged logo */
+        max-height: 95px;
         width: auto;
       }
 
@@ -274,23 +278,18 @@
           padding: 20px 18px 18px;
         }
 
-        /* Keep logo beside text on mobile */
+        /* keep logo + text side-by-side on mobile */
         .signature-card {
-          flex-direction: row;        /* stay side-by-side */
+          flex-direction: row;
           align-items: center;
           text-align: left;
           gap: 12px;
         }
 
-        .sig-text {
-          flex: 1;                    /* let text take remaining width */
-        }
-
         .sig-logo img {
-          max-height: 70px;           /* a bit smaller so it doesn’t dominate */
+          max-height: 70px;
         }
       }
-
     </style>
   </head>
 
@@ -301,7 +300,7 @@
     </header>
 
     <main>
-      <!-- Intro + language row (Option C layout) -->
+      <!-- Intro + language row -->
       <div class="card center" id="languageCard">
         <p id="introEn">
           This light-hearted reading is meant for personal reflection and
@@ -335,7 +334,7 @@
         <label id="dobLabel" for="dob">
           Enter your Date of Birth
           <span style="font-weight: normal">
-            (format <code>DDMMMYYYY</code>, e.g., <code>08DEC1977</code>)
+            (format <code>DDMMMYYYY</code>, e.g., <code>09AUG1945</code>)
           </span>
         </label>
         <div class="dob-row">
@@ -408,8 +407,6 @@
 
       const introEn = document.getElementById("introEn");
       const introZh = document.getElementById("introZh");
-      const langPromptEn = document.getElementById("langPromptEn");
-      const langPromptZh = document.getElementById("langPromptZh");
       const noticeEn = document.getElementById("noticeEn");
       const noticeZh = document.getElementById("noticeZh");
       const dobLabel = document.getElementById("dobLabel");
@@ -419,8 +416,63 @@
 
       let selectedLanguage = null; // 'en' or 'zh'
 
-      const EN_LIMIT_KEY = "sghc2026_en_used";
-      const ZH_LIMIT_KEY = "sghc2026_zh_used";
+      // ---- Limit + UAT configuration ----
+      const LIMIT_STORAGE_KEY = "sghc2026_limits";
+      const isUAT = window.location.search.includes("uat=1");
+
+      function getTodayKey() {
+        const d = new Date();
+        return d.toISOString().slice(0, 10); // YYYY-MM-DD
+      }
+
+      function loadLimitState() {
+        const today = getTodayKey();
+        try {
+          const raw = localStorage.getItem(LIMIT_STORAGE_KEY);
+          if (!raw) {
+            return { date: today, enUsed: false, zhUsed: false };
+          }
+          const parsed = JSON.parse(raw);
+          if (!parsed.date || parsed.date !== today) {
+            return { date: today, enUsed: false, zhUsed: false };
+          }
+          return {
+            date: parsed.date,
+            enUsed: !!parsed.enUsed,
+            zhUsed: !!parsed.zhUsed,
+          };
+        } catch (e) {
+          return { date: today, enUsed: false, zhUsed: false };
+        }
+      }
+
+      let limitState = loadLimitState();
+
+      function saveLimitState() {
+        try {
+          localStorage.setItem(LIMIT_STORAGE_KEY, JSON.stringify(limitState));
+        } catch (e) {
+          // ignore storage errors
+        }
+      }
+
+      function hasReachedLimit(lang) {
+        if (isUAT) return false;
+        if (lang === "zh") {
+          return limitState.zhUsed;
+        }
+        return limitState.enUsed;
+      }
+
+      function markUsed(lang) {
+        if (isUAT) return;
+        if (lang === "zh") {
+          limitState.zhUsed = true;
+        } else {
+          limitState.enUsed = true;
+        }
+        saveLimitState();
+      }
 
       // ----- Signature content -----
       const sigHtmlEn = `
@@ -462,19 +514,15 @@
         langZhBtn.classList.toggle("selected", lang === "zh");
 
         if (lang === "zh") {
-          // Header & subtitle
           mainTitle.textContent = "2026 马年运势报告";
           subTitle.textContent = "一分钟轻松解读。无需登入。不储存资料。";
 
-          // Intro + prompts
           introEn.classList.add("hidden");
           introZh.classList.remove("hidden");
 
-          // PDPA
           noticeEn.classList.add("hidden");
           noticeZh.classList.remove("hidden");
 
-          // DoB label & button
           dobLabel.innerHTML =
             '请输入您的出生日期 <span style="font-weight: normal;">（格式 <code>DDMMMYYYY</code>，例如 <code>08DEC1977</code>）</span>';
           getReportBtn.textContent = "生成我的 2026 马年运势报告";
@@ -498,26 +546,11 @@
         inputCard.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
-      function hasReachedLimit(lang) {
-        if (lang === "zh") {
-          return !!localStorage.getItem(ZH_LIMIT_KEY);
-        }
-        return !!localStorage.getItem(EN_LIMIT_KEY);
-      }
-
-      function markUsed(lang) {
-        if (lang === "zh") {
-          localStorage.setItem(ZH_LIMIT_KEY, Date.now().toString());
-        } else {
-          localStorage.setItem(EN_LIMIT_KEY, Date.now().toString());
-        }
-      }
-
       function getLimitMessage(lang) {
         if (lang === "zh") {
-          return "为了让更多人免费使用，这个工具每位访客只可生成一份英文报告和一份中文报告。如果您已经获取了自己的报告，欢迎把链接分享给亲友，让他们也试试看 2026 马年运势 😊";
+          return "为了让更多人免费使用，这个工具每位访客每天只可生成一份英文报告和一份中文报告。如果您已经获取了自己的报告，欢迎把链接分享给亲友，让他们也试试看 2026 马年运势 😊";
         }
-        return "To keep this free tool open for everyone, each visitor can generate one English and one Chinese report. If you've already received yours, please share this link with friends who might enjoy their own 2026 Year of the Horse reading 😊";
+        return "To keep this free tool open for everyone, each visitor can generate one English and one Chinese report per day. If you've already received yours, please share this link with friends who might enjoy their own 2026 Year of the Horse reading 😊";
       }
 
       langEnBtn.addEventListener("click", () => setLanguage("en"));
