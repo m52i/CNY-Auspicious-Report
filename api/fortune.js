@@ -150,9 +150,20 @@ HTML requirements:
     }
 
     const data = await response.json();
-    const html =
-      data?.choices?.[0]?.message?.content?.trim() ||
-      "<p>Sorry, the report could not be generated. Please try again later.</p>";
+    let raw = data?.choices?.[0]?.message?.content || "";
+
+    // --- CLEAN CODE-BLOCK FENCES LIKE ```html ... ``` ---
+    let html = raw.trim();
+    // strip leading ```html / ```HTML / ``` (if present)
+    html = html.replace(/^```[a-zA-Z]*\s*\n?/, "");
+    // strip trailing ``` (if present)
+    html = html.replace(/```$/, "").trim();
+    // ----------------------------------------------------
+
+    if (!html) {
+      html =
+        "<p>Sorry, the report could not be generated. Please try again later.</p>";
+    }
 
     res.status(200).json({ html });
   } catch (err) {
