@@ -97,12 +97,21 @@
         padding: 16px 14px 18px;
         text-align: center;
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
-      }
+
+        /* NEW: keep title + button aligned nicely */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+      }  
 
       .lang-tile-title {
         font-size: 0.95rem;
         font-weight: 600;
         margin-bottom: 10px;
+
+        /* NEW: ensures both tiles reserve similar space for text */
+        min-height: 2.6em; /* tweak between 2.4–2.8em if you want */
       }
 
       .primary-btn,
