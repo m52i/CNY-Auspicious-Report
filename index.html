@@ -274,16 +274,23 @@
           padding: 20px 18px 18px;
         }
 
+        /* Keep logo beside text on mobile */
         .signature-card {
-          flex-direction: column-reverse;
-          align-items: flex-start;
+          flex-direction: row;        /* stay side-by-side */
+          align-items: center;
           text-align: left;
+          gap: 12px;
+        }
+
+        .sig-text {
+          flex: 1;                    /* let text take remaining width */
         }
 
         .sig-logo img {
-          max-height: 85px;
+          max-height: 70px;           /* a bit smaller so it doesn’t dominate */
         }
       }
+
     </style>
   </head>
 
