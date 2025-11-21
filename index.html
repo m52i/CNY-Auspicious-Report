@@ -614,13 +614,18 @@
           const data = await resp.json();
           const html = data.html || data.result || "";
           if (!html) {
-            throw new Error(
-              "The report could not be generated. Please try again."
-            );
+            throw new Error("The report could not be generated. Please try again.");
           }
 
           resultEl.innerHTML = `<div class="report-card">${html}</div>`;
           colorizeDosDonts();
+
+          // 👉 NEW: Auto-scroll to the report
+          resultEl.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+          });
+
           markUsed(selectedLanguage);
         } catch (err) {
           showError(err.message || "Something went wrong. Please try again.");
